@@ -12,7 +12,6 @@ const Main = () => <View />;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     alignItems: 'center',
     justifyContent: 'center',
@@ -20,7 +19,6 @@ const styles = StyleSheet.create({
 });
 
 export default function Home({ navigation }) {
-  const [textIn, setText] = useState();
   const [books, setbooks] = useState();
   const getBooks = async (bookname) => {
     try {
@@ -49,13 +47,17 @@ export default function Home({ navigation }) {
       <View>
 
         <TextInput
-          style={{ height: 40, borderColor: 'black', borderWidth: 1 }}
-          onChangeText={(text) => setText(text)}
-          value={textIn}
+          style={{
+            width: 300, marginBottom: 10, borderColor: 'black', borderWidth: 1,
+          }}
+          onChangeText={(text) => getBooks(text)}
+          clearButtonMode="always"
         />
         <Button
+          style={{
+            width: 200,
+          }}
           onPress={() => {
-            getBooks(textIn);
             navigation.navigate('Search', { books });
           }}
           title="Search"
@@ -66,6 +68,8 @@ export default function Home({ navigation }) {
 }
 
 Home.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  navigation: PropTypes.object.isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+    openDrawer: PropTypes.func.isRequired,
+  }).isRequired,
 };
