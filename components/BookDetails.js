@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Text, View, Image } from "react-native";
-import axios from "axios";
+import React, { useState, useEffect, useCallback } from 'react';
+import { Text, View, Image } from 'react-native';
+import axios from 'axios';
+import PropTypes from 'prop-types';
 
 export default function BookDetails({ bookPre }) {
   const [book, setBook] = useState();
-  const [textShown, setTextShown] = useState(false); //To show ur remaining Text
+  const [textShown, setTextShown] = useState(false); // To show ur remaining Text
   const [lengthMore, setLengthMore] = useState(false);
 
   const getBookInfo = async (bookURL) => {
@@ -21,20 +22,20 @@ export default function BookDetails({ bookPre }) {
   }, [bookPre]);
 
   const onTextLayout = useCallback((e) => {
-    setLengthMore(e.nativeEvent.lines.length >= 4); //to check the text is more than 4 lines or not
+    setLengthMore(e.nativeEvent.lines.length >= 4); // to check the text is more than 4 lines or not
   }, []);
 
   const renderStars = (no) => {
-    let stars = "";
-    for (let i = no; i > 0; i--) {
-      stars = stars + "⭐";
+    let stars = '';
+    for (let i = no; i > 0; i -= 1) {
+      stars += '⭐';
     }
     return stars;
   };
-  
-  const toggleNumberOfLines = () => { //To toggle the show text or hide it
+
+  const toggleNumberOfLines = () => { // To toggle the show text or hide it
     setTextShown(!textShown);
-}
+  };
   return (
     <View>
       {book && (
@@ -49,22 +50,30 @@ export default function BookDetails({ bookPre }) {
             numberOfLines={textShown ? undefined : 4}
             style={{ lineHeight: 21 }}
           >
-            {book.description.replace(/<p>/gi, "")}
+            {book.description.replace(/<p>/gi, '')}
           </Text>
           {lengthMore ? (
             <Text
               onPress={toggleNumberOfLines}
               style={{ lineHeight: 21, marginTop: 10 }}
             >
-              {textShown ? "Read less..." : "Read more..."}
+              {textShown ? 'Read less...' : 'Read more...'}
             </Text>
           ) : null}
-          <Text>page counts: {book.pageCount}</Text>
-          <Text>by {book.authors?.map((e) => e + " ")}</Text>
+          <Text>
+            page counts:
+            {book.pageCount}
+          </Text>
+          <Text>
+            by
+            {book.authors?.map((e) => `${e} `)}
+          </Text>
           <View>
             <Text>
               {renderStars(4)}
-              from {book.ratingsCount}
+              from
+              {' '}
+              {book.ratingsCount}
             </Text>
           </View>
         </View>
@@ -72,3 +81,6 @@ export default function BookDetails({ bookPre }) {
     </View>
   );
 }
+BookDetails.propTypes = {
+  bookPre: PropTypes.string.isRequired,
+};
