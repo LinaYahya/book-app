@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import {
-  TextInput, View, Button, Text, Platform, StatusBar, StyleSheet,
+  TextInput, View, Button, Platform, StyleSheet, StatusBar, SafeAreaView,
 } from 'react-native';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import { createStackNavigator } from '@react-navigation/stack';
-
-const Stack = createStackNavigator();
-const Main = () => <View />;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  homeInput: {
+    width: 300, marginBottom: 10, borderColor: 'black', borderWidth: 1,
+  },
+  homeSearch: {
+    width: 200,
   },
 });
 
@@ -32,44 +34,27 @@ export default function Home({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Main"
-          component={Main}
-          options={{
-            headerLeft: () => (
-              <Text onPress={() => navigation.openDrawer()}>Open</Text>
-            ),
-          }}
-        />
-      </Stack.Navigator>
+    <SafeAreaView style={styles.container}>
       <View>
-
         <TextInput
-          style={{
-            width: 300, marginBottom: 10, borderColor: 'black', borderWidth: 1,
-          }}
+          style={styles.homeInput}
           onChangeText={(text) => getBooks(text)}
           clearButtonMode="always"
         />
         <Button
-          style={{
-            width: 200,
-          }}
+          style={styles.homeSearch}
           onPress={() => {
             navigation.navigate('Search', { books });
           }}
           title="Search"
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 Home.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
-    openDrawer: PropTypes.func.isRequired,
   }).isRequired,
 };
