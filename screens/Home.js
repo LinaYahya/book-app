@@ -27,7 +27,7 @@ export default function Home({ navigation }) {
       const { data } = await axios(
         `https://www.googleapis.com/books/v1/volumes?q=${bookname}`,
       );
-      setbooks(data.items.slice(0, 2));
+      setbooks(data.items);
     } catch (err) {
       console.log(err);
     }

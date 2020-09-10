@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Platform, StatusBar, Text, Button, SafeAreaView,
+  Platform, StatusBar, Text, Button, SafeAreaView, StyleSheet,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import BooksSection from '../components/Book';

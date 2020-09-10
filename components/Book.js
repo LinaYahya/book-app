@@ -13,7 +13,7 @@ const BookImage = ({ id, selfLink, volumeInfo }) => {
       <TouchableHighlight onPress={() => navigation.navigate('Book Details', { imageLink: selfLink })}>
         <Image
           source={{ uri: volumeInfo.imageLinks.thumbnail }}
-          style={{ width: 300, height: 300, margin: 25 }}
+          style={{ width: 250, height: 250, margin: 25 }}
         />
       </TouchableHighlight>
     </View>
