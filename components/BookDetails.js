@@ -1,7 +1,25 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useState, useEffect, useCallback } from 'react';
-import { Text, View, Image } from 'react-native';
+import {
+  Text, View, Image, ScrollView, StyleSheet,
+} from 'react-native';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+
+const styles = StyleSheet.create({
+  text: { marginBottom: 5 },
+  titleText: { fontSize: 18, fontWeight: 'bold' },
+  thumbnail: { width: '60%', height: 300, resizeMode: 'contain' },
+});
+
+const TextLabelInfo = ({ titleText, bodyText }) => (
+  <Text style={styles.text}>
+    <Text style={styles.titleText}>
+      {titleText}
+    </Text>
+    <Text>{bodyText}</Text>
+  </Text>
+);
 
 export default function BookDetails({ bookPre }) {
   const [book, setBook] = useState();
@@ -37,50 +55,47 @@ export default function BookDetails({ bookPre }) {
     setTextShown(!textShown);
   };
   return (
-    <View>
+    <View style={{ margin: 25 }}>
       {book && (
-        <View>
+        <ScrollView>
           <Image
             source={{ uri: book.imageLinks.thumbnail }}
-            style={{ width: 200, height: 200 }}
+            style={styles.thumbnail}
           />
-          <Text>{book.title}</Text>
+          <Text>
+            <Text style={[styles.titleText, { paddingBottom: 10 }]}>{book.title}</Text>
+            <Text>{renderStars(4)}</Text>
+          </Text>
+
           <Text
             onTextLayout={onTextLayout}
             numberOfLines={textShown ? undefined : 4}
             style={{ lineHeight: 21 }}
           >
-            {book.description.replace(/<p>/gi, '')}
+            {book.description?.replace(/<p>/gi, '')}
           </Text>
           {lengthMore ? (
             <Text
               onPress={toggleNumberOfLines}
-              style={{ lineHeight: 21, marginTop: 10 }}
+              style={{ lineHeight: 21, marginTop: 5, fontWeight: 'bold' }}
             >
               {textShown ? 'Read less...' : 'Read more...'}
             </Text>
           ) : null}
-          <Text>
-            page counts:
-            {book.pageCount}
-          </Text>
-          <Text>
-            by
-            {book.authors?.map((e) => `${e} `)}
-          </Text>
-          <View>
-            <Text>
-              {renderStars(4)}
-              from
-              {' '}
-              {book.ratingsCount}
-            </Text>
-          </View>
-        </View>
+
+          <TextLabelInfo titleText="page counts: " bodyText={book.pageCount} />
+          <TextLabelInfo titleText="By: " bodyText={book.authors?.map((e) => `${e}, `)} />
+
+        </ScrollView>
       )}
     </View>
   );
 }
+TextLabelInfo.propTypes = {
+  titleText: PropTypes.any.isRequired,
+  bodyText: PropTypes.any.isRequired,
+};
+
 BookDetails.propTypes = {
   bookPre: PropTypes.string.isRequired,
 };
