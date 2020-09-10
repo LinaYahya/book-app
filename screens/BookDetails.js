@@ -1,13 +1,23 @@
 import React from 'react';
-import { View } from 'react-native';
+import {
+  StatusBar, StyleSheet, Platform, SafeAreaView,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import BookDetail from '../components/BookDetails';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    alignItems: 'center',
+  },
+});
+
 export default function BookDetails({ route }) {
   return (
-    <View>
+    <SafeAreaView style={styles.container}>
       <BookDetail bookPre={route.params.imageLink} />
-    </View>
+    </SafeAreaView>
   );
 }
 
