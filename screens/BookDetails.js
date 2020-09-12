@@ -14,17 +14,19 @@ const styles = StyleSheet.create({
 });
 
 export default function BookDetails({ route }) {
-  const saveToRead = async (imageLink) => {
+  const saveToRead = async (imageLink, selfLink) => {
     try {
       const bookToRead = JSON.parse(await AsyncStorage.getItem('TOREAD'));
       let bookToSave;
       if (bookToRead) {
         bookToSave = JSON.stringify([...bookToRead, {
           imageLink,
+          selfLink,
         }]);
       } else {
         bookToSave = JSON.stringify([{
           imageLink,
+          selfLink,
         }]);
       }
       await AsyncStorage.setItem('TOREAD', bookToSave);
@@ -35,8 +37,8 @@ export default function BookDetails({ route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BookDetail bookPre={route.params.imageLink}>
-        <Button title="Want to read" onPress={() => saveToRead(route.params.imageLink)} />
+      <BookDetail bookPre={route.params.selfLink}>
+        <Button title="Want to read" onPress={() => saveToRead(route.params.imageLink, route.params.selfLink)} />
       </BookDetail>
     </SafeAreaView>
   );
