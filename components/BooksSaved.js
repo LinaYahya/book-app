@@ -5,7 +5,7 @@ import BookImage from './BookImage';
 
 export default function BookSaved({ books }) {
   const renderItem = ({ item: { selfLink, imageLink } }) => (
-    <BookImage id={selfLink} selfLink={selfLink} imageLink={imageLink} />
+    <BookImage id={selfLink} selfLink={selfLink} imageLink={imageLink} type="saved" />
   );
   return (
     <View>

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  TextInput, View, Button, Platform, StyleSheet, StatusBar, SafeAreaView,
+  TextInput,
+  View, Button, Platform, StyleSheet, StatusBar, SafeAreaView, AsyncStorage, Text, ScrollView,
 } from 'react-native';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import BooksSaved from '../components/BooksSaved';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,6 +24,8 @@ const styles = StyleSheet.create({
 
 export default function Home({ navigation }) {
   const [books, setbooks] = useState();
+  const [savedBooks, setsavedBooks] = useState();
+
   const getBooks = async (bookname) => {
     try {
       const { data } = await axios(
@@ -32,23 +36,53 @@ export default function Home({ navigation }) {
       console.log(err);
     }
   };
+  const getSavedBooks = async () => {
+    try {
+      const bookToRead = await AsyncStorage.getItem('TOREAD');
+      if (bookToRead !== null) {
+        setsavedBooks(JSON.parse(bookToRead));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getSavedBooks();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <TextInput
-          style={styles.homeInput}
-          onChangeText={(text) => getBooks(text)}
-          clearButtonMode="always"
-        />
-        <Button
-          style={styles.homeSearch}
-          onPress={() => {
-            navigation.navigate('Search', { books });
+      {/* {console.log(savedBooks, 'hi home')} */}
+      <ScrollView>
+        <View>
+          <TextInput
+            style={styles.homeInput}
+            onChangeText={(text) => getBooks(text)}
+            clearButtonMode="always"
+          />
+          <Button
+            style={styles.homeSearch}
+            onPress={() => {
+              navigation.navigate('Search', { books });
+            }}
+            title="Search"
+          />
+        </View>
+        {savedBooks && (
+        <View>
+          <Text onPress={() => {
+            navigation.navigate('Want To-Read Books', { savedBooks });
           }}
-          title="Search"
-        />
-      </View>
+          >
+            Want to-read books
+          </Text>
+          <BooksSaved books={savedBooks} />
+        </View>
+
+        ) }
+      </ScrollView>
+
     </SafeAreaView>
   );
 }

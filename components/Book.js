@@ -5,7 +5,7 @@ import BookImage from './BookImage';
 
 export default function BooksSection({ books }) {
   const renderItem = ({ item: { id, selfLink, volumeInfo } }) => (
-    <BookImage id={id} selfLink={selfLink} imageLink={volumeInfo.imageLinks.thumbnail} />
+    <BookImage id={id} selfLink={selfLink} imageLink={volumeInfo.imageLinks.thumbnail} type="search" />
   );
   return (
     <View>
