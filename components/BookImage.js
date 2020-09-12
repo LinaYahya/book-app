@@ -15,7 +15,7 @@ export default function BookImage({
       <TouchableHighlight onPress={() => navigation.navigate('Book Details', { imageLink, selfLink, type })}>
         <Image
           source={{ uri: imageLink }}
-          style={{ width: 250, height: 250, margin: 25 }}
+          style={{ width: type === 'saved' ? 130 : 250, height: type === 'saved' ? 130 : 250, margin: 25 }}
         />
       </TouchableHighlight>
     </View>

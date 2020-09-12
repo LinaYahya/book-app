@@ -15,16 +15,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   homeInput: {
-    width: 300, marginBottom: 10, borderColor: 'black', borderWidth: 1,
+    width: 200, marginBottom: 10, borderColor: 'gray', borderWidth: 1,
   },
-  homeSearch: {
-    width: 200,
-  },
+  homeSearch: { width: 100, marginLeft: 5, height: 45 },
+  title: { fontWeight: 'bold', fontSize: 18 },
 });
 
 export default function Home({ navigation }) {
   const [books, setbooks] = useState();
   const [savedBooks, setsavedBooks] = useState();
+  const [readBooks, setreadBooks] = useState();
 
   const getBooks = async (bookname) => {
     try {
@@ -46,38 +46,67 @@ export default function Home({ navigation }) {
       console.log(err);
     }
   };
-
+  const getReadBooks = async () => {
+    try {
+      const bookToRead = await AsyncStorage.getItem('READ');
+      if (bookToRead !== null) {
+        setreadBooks(JSON.parse(bookToRead));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     getSavedBooks();
+    getReadBooks();
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* {console.log(savedBooks, 'hi home')} */}
       <ScrollView>
-        <View>
+        <Text style={styles.title}>
+          Search by book name
+        </Text>
+        <View style={{ flexDirection: 'row' }}>
           <TextInput
             style={styles.homeInput}
             onChangeText={(text) => getBooks(text)}
             clearButtonMode="always"
           />
-          <Button
-            style={styles.homeSearch}
-            onPress={() => {
-              navigation.navigate('Search', { books });
-            }}
-            title="Search"
-          />
+          <View style={styles.homeSearch}>
+            <Button
+              onPress={() => {
+                navigation.navigate('Search', { books });
+              }}
+              title="Search"
+            />
+          </View>
+
         </View>
         {savedBooks && (
         <View>
-          <Text onPress={() => {
-            navigation.navigate('Want To-Read Books', { savedBooks });
-          }}
+          <Text
+            onPress={() => {
+              navigation.navigate('Want To-Read Books', { savedBooks });
+            }}
+            style={styles.title}
           >
             Want to-read books
           </Text>
           <BooksSaved books={savedBooks} />
+        </View>
+        ) }
+        {readBooks && (
+        <View>
+          <Text
+            // onPress={() => {
+            //   navigation.navigate('Want To-Read Books', { savedBooks });
+            // }}
+            style={styles.title}
+          >
+            My Books
+          </Text>
+          <BooksSaved books={readBooks} />
         </View>
 
         ) }
