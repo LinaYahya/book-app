@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  StatusBar, StyleSheet, Platform, SafeAreaView,
+  StatusBar, StyleSheet, Platform, SafeAreaView, Button, AsyncStorage,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import BookDetail from '../components/BookDetails';
@@ -14,9 +14,30 @@ const styles = StyleSheet.create({
 });
 
 export default function BookDetails({ route }) {
+  const saveToRead = async (imageLink) => {
+    try {
+      const bookToRead = JSON.parse(await AsyncStorage.getItem('TOREAD'));
+      let bookToSave;
+      if (bookToRead) {
+        bookToSave = JSON.stringify([...bookToRead, {
+          imageLink,
+        }]);
+      } else {
+        bookToSave = JSON.stringify([{
+          imageLink,
+        }]);
+      }
+      await AsyncStorage.setItem('TOREAD', bookToSave);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <BookDetail bookPre={route.params.imageLink} />
+      <BookDetail bookPre={route.params.imageLink}>
+        <Button title="Want to read" onPress={() => saveToRead(route.params.imageLink)} />
+      </BookDetail>
     </SafeAreaView>
   );
 }

@@ -21,7 +21,7 @@ const TextLabelInfo = ({ titleText, bodyText }) => (
   </Text>
 );
 
-export default function BookDetails({ bookPre }) {
+export default function BookDetails({ bookPre, children }) {
   const [book, setBook] = useState();
   const [textShown, setTextShown] = useState(false); // To show ur remaining Text
   const [lengthMore, setLengthMore] = useState(false);
@@ -54,6 +54,7 @@ export default function BookDetails({ bookPre }) {
   const toggleNumberOfLines = () => { // To toggle the show text or hide it
     setTextShown(!textShown);
   };
+
   return (
     <View style={{ margin: 25 }}>
       {book && (
@@ -85,6 +86,7 @@ export default function BookDetails({ bookPre }) {
 
           <TextLabelInfo titleText="page counts: " bodyText={book.pageCount} />
           <TextLabelInfo titleText="By: " bodyText={book.authors?.map((e) => `${e}, `)} />
+          {children}
 
         </ScrollView>
       )}
@@ -98,4 +100,8 @@ TextLabelInfo.propTypes = {
 
 BookDetails.propTypes = {
   bookPre: PropTypes.string.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
 };
