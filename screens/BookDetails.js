@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -25,6 +25,8 @@ const styles = StyleSheet.create({
 });
 
 export default function BookDetails({ route }) {
+  const [saved, setsaved] = useState(false);
+
   const saveToRead = async (imageLink, selfLink) => {
     try {
       const bookToRead = JSON.parse(await AsyncStorage.getItem('TOREAD'));
@@ -46,6 +48,7 @@ export default function BookDetails({ route }) {
         ]);
       }
       await AsyncStorage.setItem('TOREAD', bookToSave);
+      setsaved(true);
     } catch (err) {
       console.log(err);
     }
@@ -56,6 +59,7 @@ export default function BookDetails({ route }) {
       const bookToRead = JSON.parse(await AsyncStorage.getItem('TOREAD'));
       const remainBooks = bookToRead.filter((e) => e.selfLink !== selfLink);
       await AsyncStorage.setItem('TOREAD', JSON.stringify(remainBooks));
+      setsaved(false);
     } catch (err) {
       console.log(err);
     }
@@ -91,14 +95,19 @@ export default function BookDetails({ route }) {
       <BookDetail bookPre={route.params.selfLink}>
         {route.params.type === 'search' ? (
           <Button
-            title="Want to read"
-            onPress={() => saveToRead(route.params.imageLink, route.params.selfLink)}
+            color={!saved ? 'blue' : 'red'}
+            title={!saved ? 'Want to-read' : 'Remove from saved'}
+            onPress={() => {
+              if(!saved){
+                saveToRead(route.params.imageLink, route.params.selfLink)
+              } else {
+                removeItem(route.params.selfLink);
+              }
+            }}
           />
         ) : (
           route.params.type === 'saved' && (
-            <View
-              style={styles.buttonsContainer}
-            >
+            <View style={styles.buttonsContainer}>
               <View style={{ flex: 1, marginRight: 5 }}>
                 <Button
                   title="Remove"
