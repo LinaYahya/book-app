@@ -56,7 +56,7 @@ export default function BookDetails({ bookPre, children }) {
   };
 
   return (
-    <View style={{ margin: 25 }}>
+    <View style={{ margin: 20 }}>
       {book && (
         <ScrollView>
           <Image
